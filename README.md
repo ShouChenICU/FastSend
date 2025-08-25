@@ -68,6 +68,20 @@ node .output/server/index.mjs
 
 ## 🐳 Docker 和 Docker Compose
 
+### 使用 Docker Hub 发行版
+
+```bash
+docker run -d --name fastsend -p 3000:3000 shouchenicu/fastsend:0.6.0
+```
+
+> [!CAUTION]
+>
+> `shouchenicu/fastsend` 是此项目在 Docker Hub 上的 **唯一** 官方镜像！
+>
+> 当前已发现 12 个第三方镜像，其中5个[^1]的下载使用量高于官方镜像。请注意甄别，风险自负！
+
+[^1]: 比如 `niliaerith/fastsend`
+
 ### Docker 构建
 
 ```bash
@@ -102,6 +116,8 @@ docker-compose up -d
 ## 🤝 贡献
 
 欢迎提交 Issue 和 Pull Request！
+
+[![Contributors](https://contrib.nn.ci/api?no_bot=true&repo=shouchenicu/fastsend)](https://github.com/shouchenicu/fastsend/graphs/contributors)
 
 ## 📝 开源协议
 
