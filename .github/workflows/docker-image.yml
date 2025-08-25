@@ -2,31 +2,66 @@ name: Build and publish Docker image
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version of the stable release'
+        required: true
+        type: string
+  release:
+    types: published
 
 jobs:
   docker:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    strategy:
+      matrix:
+        platform:
+          - linux/amd64
+          - linux/arm64/v8
+
     steps:
-    -
-      name: Checkout
+    - name: Checkout
       uses: actions/checkout@v4
-    -
-      name: Set up QEMU
+
+    - name: Version check
+      id: get-version
+      shell: bash
+      run: |
+        # Exporting version number
+        if [ "${{ github.event_name }}" == "release" ]; then
+          echo "Release mode detected!"
+          VERSION=$(echo "${{ github.ref_name }}" | sed 's/^v//')
+        elif [ "${{ github.event_name}}" == 'workflow_dispatch' ]; then
+          echo "Manual mode detected!"
+          VERSION=$(echo "${{ inputs.version }}" | sed 's/^v//')
+        fi
+
+        # Check if it's a valid semver
+        # We're currently only supporting "major.minor.patch"
+        if ! [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          echo "::error title=Version Error::Invalid version number: $VERSION"
+          exit 1
+        fi
+        echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+    - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
-    -
-      name: Set up Docker Buildx
+
+    - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
-    - 
-      name: Log in to Docker Hub
+
+    - name: Log in to Docker Hub
       uses: docker/login-action@v3
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-    - 
-      name: Build and push
+
+    - name: Build and push
       uses: docker/build-push-action@v5
       with:
         context: .
         push: true
-        platforms: linux/amd64
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/fastsend:latest
+        platforms: ${{ matrix.platform }}
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/fastsend:${{ steps.get-version.outputs.version }}
