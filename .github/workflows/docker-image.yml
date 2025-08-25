@@ -42,11 +42,7 @@ jobs:
         echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
     - name: Set up QEMU
-      id: qemu
       uses: docker/setup-qemu-action@v3
-      with:
-        # We only need AMD64 and ARM64
-        platforms: linux/amd64,linux/arm64
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
@@ -62,5 +58,5 @@ jobs:
       with:
         context: .
         push: true
-        platforms: ${{ steps.qemu.outputs.platforms }}
+        platforms: linux/amd64,linux/arm64
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/fastsend:${{ steps.get-version.outputs.version }}
