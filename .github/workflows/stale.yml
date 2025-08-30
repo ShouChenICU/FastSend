@@ -1,16 +1,16 @@
 # YAML
-name: 过时问题管理
+name: Stale Issue Management
 
 on:
   schedule:
-    # 每三天的世界协调时下午 16:00 运行（对应北京时间凌晨 0:00）
+    # Run at 16:00 UTC every 3 days (corresponds to 00:00 Beijing time)
     - cron: '0 16 */3 * *'
-  # 允许被手动触发
+  # Allow manual triggering
   workflow_dispatch:
 
 permissions:
   contents: write
-  # 此处需要额外的权限以操作 Issues 和 PRs
+  # Additional permissions are required to operate Issues and PRs
   issues: write
   pull-requests: write
 
@@ -18,12 +18,12 @@ jobs:
   manage_issues:
     runs-on: ubuntu-latest
     steps:
-      - name: 关闭过期的 Issues 和 PRs
+      - name: Close stale Issues and PRs
         uses: actions/stale@v9.1.0
         with:
-          # 30 天未活动的 Issues / PRs 将被标记为过时
+          # Issues / PRs inactive for 30 days will be marked as stale
           days-before-stale: 30
-          # 14 天后过时的 Issues / PRs 将被关闭
+          # Stale Issues / PRs will be closed after 14 days
           days-before-close: 14
           stale-issue-message: |
             > [!WARNING]
@@ -45,15 +45,15 @@ jobs:
             > 您的 PR 已经过期，我们已经自动关闭了它。
             >
             > 如果您仍然希望合并此 PR ，请在此 PR 下方留言，我们将尽快回复并可能重新开启它。
-          # 过期的 Issues 和 PRs 会被添加以下标签
+          # Stale Issues and PRs will be added the following labels
           stale-issue-label: No-Recent-Activity
           stale-pr-label: No-Recent-Activity
-          # 以下标签的 Issue 和 PRs 不会被关闭
+          # Issues and PRs with the following labels will not be closed
           exempt-issue-labels: In-Progress
           exempt-pr-labels: In-Progress
-          # 当 Issues 和 PRs 重新恢复活跃状态时，自动移除以下标签
+          # When Issues and PRs become active again, automatically remove the following labels
           labels-to-remove-when-unstale: No-Recent-Activity
-          # 按照 Issues 和 PRs 的创建时间升序排序，优先处理旧的 Issues 和 PRs
+          # Sort Issues and PRs by creation time in ascending order, prioritize handling old Issues and PRs
           ascending: true
-          # 忽略处于草稿状态的 PRs
+          # Ignore PRs in draft status
           exempt-draft-pr: true
