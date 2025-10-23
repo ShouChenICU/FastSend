@@ -3,8 +3,8 @@ name: Stale Issue Management
 
 on:
   schedule:
-    # Run at 16:00 UTC every 3 days (corresponds to 00:00 Beijing time)
-    - cron: '0 16 */3 * *'
+    # Run at 16:00 UTC every 14 days (corresponds to 00:00 CST)
+    - cron: '0 16 */14 * *'
   # Allow manual triggering
   workflow_dispatch:
 
