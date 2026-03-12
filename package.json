@@ -35,7 +35,8 @@
   },
   "resolutions": {
     "rollup": "^4.59.0",
-    "workbox-build/rollup": "^2.80.0"
+    "workbox-build/rollup": "^2.80.0",
+    "serialize-javascript": "^7.0.3"
   },
   "packageManager": "yarn@1.22.22"
 }
