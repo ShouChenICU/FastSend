@@ -22,17 +22,17 @@ jobs:
         uses: actions/stale@v10.2.0
         with:
           # Issues / PRs inactive for 30 days will be marked as stale
-          days-before-stale: 30
+          days-before-stale: 14
           # Stale Issues / PRs will be closed after 14 days
-          days-before-close: 14
+          days-before-close: 7
           stale-issue-message: |
             > [!WARNING]
             >
-            > 您的 Issue 已经过期，我们将在 14 天后以「无计划」为由自动关闭。
+            > 您的 Issue 已经过期，我们将在 7 天后以「无计划」为由自动关闭。
           stale-pr-message: |
             > [!WARNING]
             >
-            > 您的 PR 已经过期，我们将在 14 天后自动将其拒绝并关闭。
+            > 您的 PR 已经过期，我们将在 7 天后自动将其拒绝并关闭。
           close-issue-message: |
             > [!CAUTION]
             >
