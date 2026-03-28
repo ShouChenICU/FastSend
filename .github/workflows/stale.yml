@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Close stale Issues and PRs
-        uses: actions/stale@v9.1.0
+        uses: actions/stale@v10.2.0
         with:
           # Issues / PRs inactive for 30 days will be marked as stale
           days-before-stale: 30
