@@ -136,8 +136,12 @@ export const useSenderTransferStore = defineStore('senderTransfer', () => {
         totalTransmittedBytes.value += ab.byteLength
 
         const nowTime = new Date().getTime()
-        curFile.value.speed =
-          (curFile.value.speed + ab.byteLength / ((nowTime - curFile.value.startTime) / 1e3)) / 2
+        const elapsed = nowTime - curFile.value.startTime
+        // 防止时间差为零导致除零异常
+        if (elapsed > 0) {
+          curFile.value.speed =
+            (curFile.value.speed + ab.byteLength / (elapsed / 1e3)) / 2
+        }
         curFile.value.startTime = nowTime
       }
 

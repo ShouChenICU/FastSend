@@ -150,11 +150,12 @@ onMounted(() => {
           <Icon name="solar:card-recive-linear" />{{ $t('label.receiveCode') }}
         </h2>
 
-        <InputOtp integerOnly v-model:model-value="receiveCode" class="gap-4">
+        <InputOtp integerOnly v-model="receiveCode" class="gap-4">
           <template #default="{ attrs, events, index }">
             <input
               :autofocus="index === 1"
-              type="number"
+              type="text"
+              inputmode="numeric"
               v-bind="attrs"
               v-on="events"
               class="border border-neutral-500/70 rounded bg-neutral-50 dark:bg-zinc-900 focus:outline-none size-14 text-2xl text-center no-arrows"

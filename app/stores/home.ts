@@ -21,10 +21,14 @@ export const useHomeStore = defineStore('home', () => {
   function initialize() {
     isModernFileAPISupport.value = isModernFileAPIAvailable()
     isDirSupport.value = supportsDirectorySelection()
+    receiveCode.value = ''
     transferConfigStore.clearTransferFiles()
   }
 
-  async function applyTransferSelection(type: 'transFile' | 'transDir' | 'syncDir', fileMap: FlatFileMap) {
+  async function applyTransferSelection(
+    type: 'transFile' | 'transDir' | 'syncDir',
+    fileMap: FlatFileMap
+  ) {
     if (Object.keys(fileMap).length === 0) {
       throw new Error(type === 'transFile' ? '未选择文件' : '目录为空')
     }
@@ -78,15 +82,25 @@ export const useHomeStore = defineStore('home', () => {
       return
     }
 
-    const item = event.dataTransfer.items[0].webkitGetAsEntry()
+    const firstItem = event.dataTransfer.items[0]
+    if (!firstItem) {
+      return
+    }
+
+    const item = firstItem.webkitGetAsEntry()
     const files = event.dataTransfer.files
     if (!item) {
       return
     }
 
     if (item.isFile) {
+      const file = files[0]
+      if (!file) {
+        return
+      }
+
       appStore.setFullScreenLoading(true)
-      await applyTransferSelection('transFile', dealFilesFormFile(files[0]))
+      await applyTransferSelection('transFile', dealFilesFormFile(file))
       return
     }
 

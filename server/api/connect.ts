@@ -1,4 +1,4 @@
-import TTLCache from '@isaacs/ttlcache'
+import { TTLCache } from '@isaacs/ttlcache'
 import { increaseTransCount } from '../utils/TransCount'
 
 // 客户端待初始化连接池，key是peer的id
@@ -66,6 +66,8 @@ function initSend(peer: any) {
       peer.send(JSON.stringify({ type: 'err', data: -1, msg: 'Init code fail' }))
       throw new Error('Init code fail')
     }
+    // 碰撞时重新生成取件码
+    code = genDigitCode(4)
   }
   waitConnectPool.set(code, peer)
   peer.isInited = true

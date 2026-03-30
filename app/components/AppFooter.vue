@@ -10,7 +10,7 @@
       <div class="w-[1px] h-4 bg-neutral-500/80 mx-2"></div>
       <span>fastsend.ing</span>
       <div class="w-[1px] h-4 bg-neutral-500/80 mx-2"></div>
-      <span>v0.6.0</span>
+      <span>v0.7.1</span>
     </div>
   </div>
 </template>

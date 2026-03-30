@@ -102,7 +102,8 @@ export const useRecipientTransferStore = defineStore('recipientTransfer', () => 
     const curBytes = curFile.value.transmittedBytes + (pdc?.getReceivedBufferSize() || 0)
     curFile.value.speed = curBytes - curFile.value.lastSize
     curFile.value.lastSize = curBytes
-    totalSpeed.value = totalTransmittedBytes.value / ((new Date().getTime() - startTime.value) / 1e3)
+    totalSpeed.value =
+      totalTransmittedBytes.value / ((new Date().getTime() - startTime.value) / 1e3)
     durationTimeStr.value = formatTime(new Date().getTime() - startTime.value)
     remainingTimeStr.value = formatTime(
       ((totalFileSize.value - totalTransmittedBytes.value) / Math.max(totalSpeed.value, 1)) * 1e3
@@ -120,13 +121,22 @@ export const useRecipientTransferStore = defineStore('recipientTransfer', () => 
 
     if (isModernFileAPISupport.value) {
       await curFileWriter?.write(buf)
-      if (curFile.value.transmittedBytes === curFile.value.size) {
-        await curFileWriter?.close()
-      }
       return
     }
 
     curFile.value.chunks.push(buf)
+  }
+
+  /**
+   * 关闭当前文件写入流，用于文件传输完成或异常时清理资源。
+   */
+  async function closeCurFileWriter() {
+    try {
+      await curFileWriter?.close()
+    } catch {
+      // writer 可能已关闭或处于异常状态，忽略
+    }
+    curFileWriter = undefined
   }
 
   function initCurFile(key?: string) {
@@ -172,7 +182,14 @@ export const useRecipientTransferStore = defineStore('recipientTransfer', () => 
     if (obj.type === 'fileDone') {
       const hash = hasher.finalize().toString(CryptoJS.enc.Base64)
       if (hash !== obj.data) {
-        console.error('Hash check failure.', curFile.value.name, 'send:', obj.data, 'receive:', hash)
+        console.error(
+          'Hash check failure.',
+          curFile.value.name,
+          'send:',
+          obj.data,
+          'receive:',
+          hash
+        )
         status.value.warn.code = -3
         toast.add({
           severity: 'error',
@@ -180,6 +197,8 @@ export const useRecipientTransferStore = defineStore('recipientTransfer', () => 
           detail: t('hint.hashCheckFail'),
           life: 5e3
         })
+        // 校验失败时关闭写入流并尝试清理已写入的文件
+        await closeCurFileWriter()
         if (saveFileFH) {
           // @ts-ignore 运行时浏览器 API 可用，类型定义未完整覆盖 remove。
           saveFileFH.remove()
@@ -187,6 +206,10 @@ export const useRecipientTransferStore = defineStore('recipientTransfer', () => 
         dispose()
         return
       }
+
+      // 校验通过，关闭写入流
+      await closeCurFileWriter()
+      transmittedCount.value++
 
       reqFileResolveFn?.()
       reqFileResolveFn = undefined
@@ -348,7 +371,9 @@ export const useRecipientTransferStore = defineStore('recipientTransfer', () => 
     totalTransmittedBytes.value = 0
 
     if (peerFilesInfo.value.type === 'transDir') {
-      waitReceiveFileList.value = Object.keys(selectedKeys.value).filter((name) => !/\/$/.test(name))
+      waitReceiveFileList.value = Object.keys(selectedKeys.value).filter(
+        (name) => !/\/$/.test(name)
+      )
       if (waitReceiveFileList.value.length === 0) {
         toast.add({ severity: 'warn', summary: 'Warn', detail: '请至少选择一个文件', life: 5e3 })
         status.value.isReceiving = false
@@ -381,10 +406,10 @@ export const useRecipientTransferStore = defineStore('recipientTransfer', () => 
         return
       }
 
-      totalFileSize.value = [...syncDirStatus.value.waitAddList, ...syncDirStatus.value.waitUpdateList].reduce(
-        (size, name) => size + (peerFilesInfo.value.fileMap[name]?.size || 0),
-        0
-      )
+      totalFileSize.value = [
+        ...syncDirStatus.value.waitAddList,
+        ...syncDirStatus.value.waitUpdateList
+      ].reduce((size, name) => size + (peerFilesInfo.value.fileMap[name]?.size || 0), 0)
     }
 
     try {
@@ -398,6 +423,7 @@ export const useRecipientTransferStore = defineStore('recipientTransfer', () => 
         }
         startTime.value = Date.now()
         calcSpeedJobId = setInterval(calcSpeedFn, 1e3)
+        receiveFileIndex.value = 1
         await requestFile(curFile.value.name)
       } else if (peerFilesInfo.value.type === 'transDir') {
         rootDirDH = await window.showDirectoryPicker()
@@ -406,6 +432,7 @@ export const useRecipientTransferStore = defineStore('recipientTransfer', () => 
         for (const key of waitReceiveFileList.value) {
           const paths = key.split('/')
           initCurFile(key)
+          receiveFileIndex.value++
           let curFolder = rootDirDH
           for (let index = 0; index < paths.length - 1; index++) {
             curFolder = await curFolder?.getDirectoryHandle(getPathSegment(paths[index]), {
@@ -419,7 +446,12 @@ export const useRecipientTransferStore = defineStore('recipientTransfer', () => 
           await requestFile(key)
         }
       } else if (peerFilesInfo.value.type === 'syncDir') {
-        for (const key of [...syncDirStatus.value.waitAddList, ...syncDirStatus.value.waitUpdateList]) {
+        startTime.value = Date.now()
+        calcSpeedJobId = setInterval(calcSpeedFn, 1e3)
+        for (const key of [
+          ...syncDirStatus.value.waitAddList,
+          ...syncDirStatus.value.waitUpdateList
+        ]) {
           const paths = key.split('/')
           let curFolder = syncTargetDH
           for (let index = 0; index < paths.length - 1; index++) {
@@ -432,6 +464,7 @@ export const useRecipientTransferStore = defineStore('recipientTransfer', () => 
           })
           curFileWriter = await curFH?.createWritable()
           initCurFile(key)
+          receiveFileIndex.value++
           await requestFile(key)
         }
 
@@ -462,6 +495,8 @@ export const useRecipientTransferStore = defineStore('recipientTransfer', () => 
       })
     } catch (error) {
       console.warn(error)
+      // 异常时关闭未完成的写入流，避免文件句柄泄漏
+      await closeCurFileWriter()
       if (calcSpeedJobId) {
         clearInterval(calcSpeedJobId)
         calcSpeedJobId = undefined

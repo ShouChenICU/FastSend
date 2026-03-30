@@ -1,7 +1,7 @@
 <h1 align="center">FastSend 文件快传 🚀</h1>
 
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-0.6.0-blue.svg?style=flat-square" />
+  <img alt="Version" src="https://img.shields.io/badge/version-0.7.1-blue.svg?style=flat-square" />
   <a href="#" target="_blank">
     <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square" />
   </a>
@@ -65,14 +65,14 @@ node .output/server/index.mjs
 
 > [!IMPORTANT]
 > 目录传输和同步需要 `HTTPS` 以及浏览器支持，一般新版本的桌面浏览器都支持
-> 
+>
 > 本项目自身的 HTTPS 配置方式（测试环境）请参考：
-> 
+>
 > - [置顶 Issue](https://github.com/ShouChenICU/FastSend/issues/9#issuecomment-2562353775)
 > - [Nuxt 部署教程（英文）](https://nuxt.com/docs/4.x/getting-started/deployment#entry-point)
-> 
+>
 > FastSend 不建议直接以 HTTPS 形式进行生产环境部署，而应当位于反向代理服务器之后，请参考：
-> 
+>
 > - [Nginx](https://nginx.org/en/docs/http/configuring_https_servers.html)
 > - [Apache httpd](https://httpd.apache.org/docs/current/ssl/)
 > - [Caddy](https://caddyserver.com/docs/quick-starts/https)
@@ -83,7 +83,7 @@ node .output/server/index.mjs
 ### 使用 Docker Hub 发行版
 
 ```bash
-docker run -d --name fastsend -p 3000:3000 shouchenicu/fastsend:0.6.0
+docker run -d --name fastsend -p 3000:3000 shouchenicu/fastsend:latest
 ```
 
 > [!CAUTION]
