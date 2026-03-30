@@ -1,5 +1,4 @@
 import CryptoJS from 'crypto-js'
-import { PeerDataChannel } from '~/utils/PeerDataChannel'
 import {
   createRecipientCurrentFileState,
   createRecipientStatusState,
@@ -10,6 +9,7 @@ import {
   type SyncDirState,
   type UserInfo
 } from '~/types/transfer'
+import { PeerDataChannel } from '~/utils/PeerDataChannel'
 
 /**
  * 接收端业务仓库。
@@ -415,9 +415,14 @@ export const useRecipientTransferStore = defineStore('recipientTransfer', () => 
     try {
       if (peerFilesInfo.value.type === 'transFile') {
         if (isModernFileAPISupport.value) {
+          const ext = curFile.value.name.match(/(\.\w+)$/)?.[1]
+          const safeName = ext
+            ? curFile.value.name.slice(0, -ext.length).replace(/\./g, '_') + ext
+            : curFile.value.name
           saveFileFH = await window.showSaveFilePicker({
             startIn: 'downloads',
-            suggestedName: curFile.value.name
+            suggestedName: safeName,
+            ...(ext && { types: [{ description: '', accept: { 'application/x-fastsend': [ext] } }] })
           })
           curFileWriter = await saveFileFH?.createWritable()
         }
