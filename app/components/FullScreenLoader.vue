@@ -1,5 +1,6 @@
-<script setup>
-const isFullScreenLoading = useFullScreenLoader()
+<script setup lang="ts">
+const appStore = useAppStore()
+const { isFullScreenLoading } = storeToRefs(appStore)
 const loaderElm = ref()
 
 watch(isFullScreenLoading, (isLoad) => {

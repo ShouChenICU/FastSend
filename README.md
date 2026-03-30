@@ -30,9 +30,21 @@ FastSend 是一个基于 WebRTC 技术的点对点文件传输工具，支持快
 
 - WebRTC
 - Vue.js
-- Nuxt3
+- Nuxt 4
+- Pinia
 - TypeScript
 - Modern File System API
+
+## 🗂️ 目录结构
+
+项目已按 Nuxt 4 默认约定迁移为 `app/` 目录结构：
+
+- `app/`：前端应用层源码，包括页面、组件、stores、composables、utils、全局样式与 `app.vue`
+- `server/`：Nitro 服务端接口与 WebSocket 信令逻辑
+- `public/`：静态资源与 PWA 相关文件
+- `presets/`：PrimeVue 主题预设
+
+这样可以更清晰地分离前端应用层与服务端上下文，也更符合 Nuxt 4 的默认扫描方式。
 
 ## 📦 安装与构建
 

@@ -1,109 +1,21 @@
 <script setup lang="ts">
 const { t } = useI18n()
-const localePath = useLocalePath()
-const router = useRouter()
 const toast = useToast()
-const isModernFileAPISupport = ref(true)
-const isDirSupport = ref(true)
-const receiveCode = ref('')
-const isFileDraging = ref(false)
+const homeStore = useHomeStore()
+const { isModernFileAPISupport, isDirSupport, receiveCode, isFileDraging } = storeToRefs(homeStore)
 const fileDragArea = ref()
 
-const { data: transCount } = useFetch('/api/transCount', {
-  method: 'post',
-  onResponseError() {
-    toast.add({
-      severity: 'error',
-      summary: 'Error',
-      detail: t('hint.serviceUnavailable')
-    })
-  }
+const { data: transCount, error: transCountError } = await useFetch('/api/transCount', {
+  method: 'post'
 })
 
 useSeoMeta({
   title: t('home')
 })
 
-// 发起目录同步
-function syncDir() {
-  // if (isModernFileAPISupport.value) {
-  // showDirectoryPicker()
-  //   .then((fh) => {
-  //     useFullScreenLoader(true)
-  //     return dealFilesFromHandler(fh)
-  //   })
-  //   .then((fileMap) => {
-  //     if (Object.keys(fileMap).length === 0) {
-  //       throw '目录为空'
-  //     }
-  //     useFilesInfo('syncDir', fileMap)
-  //     router.push(localePath('/sender'))
-  //     useFullScreenLoader(false)
-  //   })
-  //   .catch((e) => {
-  //     console.warn(e)
-  //     toast.add({ severity: 'error', summary: 'Error', detail: e, life: 3000 })
-  //     useFullScreenLoader(false)
-  //   })
-  // } else {
-  // 注意：移动端不支持选择目录
-  selectDir()
-    .then((files) => {
-      useFullScreenLoader(true)
-      return dealFilesFormList(files)
-    })
-    .then((fileMap) => {
-      if (Object.keys(fileMap).length === 0) {
-        throw 'The directory is empty'
-      }
-      // console.log(fileMap)
-      useFilesInfo('syncDir', fileMap)
-      router.push(localePath('/sender'))
-    })
-    .catch((e) => {
-      console.warn(e)
-      toast.add({ severity: 'error', summary: 'Error', detail: e, life: 5e3 })
-      useFullScreenLoader(false)
-    })
-  // }
-}
-
-// 发送目录
-function sendDir() {
-  // 注意：移动端不支持选择目录
-  selectDir()
-    .then((files) => {
-      useFullScreenLoader(true)
-      return dealFilesFormList(files)
-    })
-    .then((fileMap) => {
-      if (Object.keys(fileMap).length === 0) {
-        throw '目录为空'
-      }
-      useFilesInfo('transDir', fileMap)
-      router.push(localePath('/sender'))
-    })
-    .catch((e) => {
-      console.warn(e)
-      toast.add({ severity: 'error', summary: 'Error', detail: e, life: 5e3 })
-      useFullScreenLoader(false)
-    })
-}
-
-// 发送文件
-function sendFile() {
-  selectFile()
-    .then((file) => {
-      useFullScreenLoader(true)
-      useFilesInfo('transFile', dealFilesFormFile(file))
-      router.push(localePath('/sender'))
-    })
-    .catch((e) => {
-      console.warn(e)
-      toast.add({ severity: 'error', summary: 'Error', detail: e, life: 5e3 })
-      useFullScreenLoader(false)
-    })
-}
+const syncDir = homeStore.syncDir
+const sendDir = homeStore.sendDir
+const sendFile = homeStore.sendFile
 
 watch(isFileDraging, (val) => {
   if (val) {
@@ -119,66 +31,39 @@ watch(isFileDraging, (val) => {
   }
 })
 
+watch(transCountError, (error) => {
+  if (!error) {
+    return
+  }
+  toast.add({
+    severity: 'error',
+    summary: 'Error',
+    detail: t('hint.serviceUnavailable')
+  })
+})
+
 function fileDragOver(e: Event) {
   e.preventDefault()
-  isFileDraging.value = true
+  homeStore.setDragging(true)
 }
 
 function fileDrop(e: DragEvent) {
-  e.preventDefault()
-  isFileDraging.value = false
-  // console.log('fileDrop', e)
-
-  if (e.dataTransfer && e.dataTransfer.items.length > 0) {
-    const item = e.dataTransfer.items[0].webkitGetAsEntry()
-    const files = e.dataTransfer.files
-    if (item) {
-      if (item.isFile) {
-        const file = files[0]
-        useFullScreenLoader(true)
-        useFilesInfo('transFile', dealFilesFormFile(file))
-        router.push(localePath('/sender'))
-      } else if (item.isDirectory) {
-        toast.add({
-          severity: 'warn',
-          summary: 'Warn',
-          detail: t('hint.noSupportFolderDrag'),
-          life: 5e3
-        })
-      }
-    }
-  }
+  homeStore.handleDropFile(e).catch(console.warn)
 }
 
-watch(
-  receiveCode,
-  () => {
-    if (receiveCode.value.length === 4) {
-      if (/^\d{4}$/.test(receiveCode.value)) {
-        useFullScreenLoader(true)
-        router.push({ path: localePath('recipient'), query: { code: receiveCode.value } })
-      } else {
-        receiveCode.value = receiveCode.value.replaceAll(' ', '')
-      }
-    }
-    // console.log(inputCode.value)
-  },
-  { flush: 'sync' }
-)
+watch(receiveCode, () => homeStore.handleReceiveCodeChange(), { flush: 'sync' })
 
 onMounted(() => {
-  isModernFileAPISupport.value = isModernFileAPIAvailable()
-  isDirSupport.value = supportsDirectorySelection()
-  useFilesInfo('', {})
+  homeStore.initialize()
 
   window.ondragenter = (e) => {
     e.preventDefault()
-    isFileDraging.value = true
+    homeStore.setDragging(true)
   }
   window.ondragleave = (e: DragEvent) => {
     e.preventDefault()
     if (!e.relatedTarget) {
-      isFileDraging.value = false
+      homeStore.setDragging(false)
     }
   }
   window.ondragover = (e) => {
@@ -186,7 +71,7 @@ onMounted(() => {
   }
   window.ondrop = (e) => {
     e.preventDefault()
-    isFileDraging.value = false
+    homeStore.setDragging(false)
   }
 })
 </script>

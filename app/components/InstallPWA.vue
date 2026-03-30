@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 const isPWA = ref(false)
-const deferredPrompt = useState('deferredPrompt')
+const appStore = useAppStore()
+const { deferredPrompt } = storeToRefs(appStore)
 
 function installPWA() {
   deferredPrompt.value?.prompt()

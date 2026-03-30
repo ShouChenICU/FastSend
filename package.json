@@ -10,35 +10,36 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@isaacs/ttlcache": "^1.4.1",
-    "@primevue/forms": "^4.3.6",
-    "@vite-pwa/nuxt": "^0.8.0",
+    "@isaacs/ttlcache": "^2.1.4",
+    "@primevue/forms": "^4.5.4",
+    "@vite-pwa/nuxt": "^1.1.1",
     "crypto-js": "^4.2.0",
-    "nuxt": "^3.16.1",
-    "primevue": "^4.0.4",
-    "qrcode": "^1.5.3",
-    "rollup": "^4.59.0",
-    "serialize-javascript": "^7.0.3",
-    "vue": "^3.5.13",
-    "vue-router": "^4.5.0",
-    "webrtc-adapter": "^9.0.1"
+    "nuxt": "^4.4.2",
+    "pinia": "^3.0.4",
+    "primevue": "^4.5.4",
+    "qrcode": "^1.5.4",
+    "serialize-javascript": "^7.0.5",
+    "vue": "^3.5.31",
+    "webrtc-adapter": "^9.0.4"
   },
   "devDependencies": {
-    "@nuxt/icon": "^1.11.0",
-    "@nuxtjs/color-mode": "^3.5.2",
-    "@nuxtjs/i18n": "^9.4.0",
-    "@nuxtjs/seo": "^3.0.1",
-    "@nuxtjs/tailwindcss": "^6.12.0",
-    "@primevue/nuxt-module": "^4.0.4",
+    "@nuxt/icon": "^2.2.1",
+    "@nuxtjs/color-mode": "^4.0.0",
+    "@nuxtjs/i18n": "^10.2.4",
+    "@nuxtjs/seo": "^5.1.0",
+    "@nuxtjs/tailwindcss": "^6.14.0",
+    "@pinia/nuxt": "^0.11.3",
+    "@primevue/nuxt-module": "^4.5.4",
     "@types/crypto-js": "^4.2.2",
-    "@types/qrcode": "^1.5.5",
-    "@types/wicg-file-system-access": "^2023.10.5",
-    "prettier": "^3.5.3"
+    "@types/qrcode": "^1.5.6",
+    "@types/wicg-file-system-access": "^2023.10.7",
+    "prettier": "^3.8.1",
+    "tailwindcss": "^3.4.17"
   },
   "resolutions": {
-    "rollup": "^4.59.0",
+    "rollup": "^4.60.0",
     "workbox-build/rollup": "^2.80.0",
-    "serialize-javascript": "^7.0.3"
+    "serialize-javascript": "^7.0.5"
   },
   "packageManager": "yarn@1.22.22"
 }

@@ -1,18 +1,12 @@
 <script setup lang="ts">
 const localePath = useLocalePath()
 const { locale, setLocale } = useI18n()
-const selectedLocale = ref('')
 const colorMode = useColorMode()
 const isBgBlur = ref(false)
-const userInfo = useUserInfo()
+const userStore = useUserStore()
+const { userInfo, isConfirmDefault } = storeToRefs(userStore)
 const tmpNickname = ref('')
 const userInfoPopover = ref()
-const i18nPopover = ref()
-const isConfirmDefault = useConfirmDefault()
-const availableLocales = ref([
-  { name: 'English', code: 'en', icon: 'icon-park-outline:english' },
-  { name: '中文', code: 'zh', icon: 'icon-park-outline:chinese' }
-])
 
 // 暗色模式切换
 function switchColorMode() {
@@ -34,7 +28,7 @@ function switchI18n() {
 
 // 是否开启发送方自动确认
 function switchConfirmDefault() {
-  localStorage.setItem('isConfirmDefault', JSON.stringify(isConfirmDefault.value))
+  userStore.setConfirmDefault(isConfirmDefault.value)
 }
 
 // 展示昵称编辑弹框
@@ -45,68 +39,28 @@ function showNicknameEditor(event: Event) {
 
 // 编辑昵称
 function editNickname() {
-  userInfo.value.nickname = tmpNickname.value.trim().substring(0, 16)
-  if (!userInfo.value.nickname) {
-    userInfo.value.nickname = 'User_' + genRandomString(6)
-  }
-  localStorage.setItem('nickname', userInfo.value.nickname)
+  userStore.setNickname(tmpNickname.value)
+  tmpNickname.value = userInfo.value.nickname
   userInfoPopover.value.hide()
 }
 
 // 编辑头像
 function editAvatar() {
-  selectAvatar((url) => {
-    if (url) {
-      userInfo.value.avatarURL = url
-      localStorage.setItem('avatarURL', url)
-    }
-  })
+  userStore.openAvatarPicker()
 }
 
 // 重置用户信息
 function clearUserInfo() {
-  initAvatar()
-  userInfo.value.nickname = 'User_' + genRandomString(6)
+  userStore.resetUserInfo()
   tmpNickname.value = userInfo.value.nickname
-  localStorage.setItem('nickname', userInfo.value.nickname)
-}
-
-function initAvatar() {
-  const fr = new FileReader()
-  fr.onload = () => {
-    userInfo.value.avatarURL = fr.result + ''
-    localStorage.setItem('avatarURL', userInfo.value.avatarURL)
-  }
-  fetch('/akari.webp')
-    .then((res) => res.blob())
-    .then((blob) => fr.readAsDataURL(blob))
 }
 
 onMounted(() => {
   window.addEventListener('scroll', () => {
     isBgBlur.value = getScrollTop() > 64
   })
-
-  // 初始化昵称
-  let nickname = localStorage.getItem('nickname')
-  if (!nickname) {
-    nickname = 'User_' + genRandomString(6)
-    localStorage.setItem('nickname', nickname)
-  }
-  userInfo.value.nickname = nickname
-
-  // 初始化头像
-  const avatarURL = localStorage.getItem('avatarURL')
-  if (!avatarURL) {
-    initAvatar()
-  } else {
-    userInfo.value.avatarURL = avatarURL
-  }
-
-  // 初始化配置
-  if (getValFromLocalStorage('isConfirmDefault', false)) {
-    isConfirmDefault.value = true
-  }
+  userStore.initializeFromStorage()
+  tmpNickname.value = userInfo.value.nickname
 })
 </script>
 

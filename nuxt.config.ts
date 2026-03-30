@@ -1,10 +1,16 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import path from 'path'
 export default defineNuxtConfig({
+  srcDir: 'app',
   devtools: { enabled: true },
   css: ['@/assets/main.css'],
 
+  imports: {
+    dirs: ['stores']
+  },
+
   modules: [
+    '@pinia/nuxt',
     '@nuxtjs/color-mode',
     '@nuxtjs/i18n',
     '@nuxtjs/tailwindcss',
@@ -76,7 +82,7 @@ export default defineNuxtConfig({
 
   pwa: {
     strategies: 'injectManifest',
-    srcDir: 'public',
+    srcDir: '../public',
     filename: 'sw.js',
     registerType: 'prompt',
 

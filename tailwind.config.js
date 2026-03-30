@@ -2,8 +2,7 @@ export default {
   darkMode: 'class', // This enables dark mode based on the presence of the "dark" class in the HTML tag
   content: [
     'presets/**/*.{js,vue,ts}', // this is optional if you are using @nuxtjs/tailwindcss
-    'pages/**/*.{js,vue,ts}',
-    'components/**/*.{js,vue,ts}'
+    'app/**/*.{js,vue,ts}'
   ],
   theme: {
     extend: {

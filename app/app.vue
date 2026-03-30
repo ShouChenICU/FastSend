@@ -11,14 +11,13 @@ useSeoMeta({
   twitterCreator: '@ShouChen_'
 })
 
-const deferredPrompt = useState('deferredPrompt')
+const appStore = useAppStore()
 
 onMounted(() => {
-  window.addEventListener('beforeinstallprompt', (e) => {
-    deferredPrompt.value = e
-    // console.log(e)
+  window.addEventListener('beforeinstallprompt', (event) => {
+    appStore.setDeferredPrompt(event as BeforeInstallPromptEvent)
   })
-  useFullScreenLoader(false)
+  appStore.setFullScreenLoading(false)
 
   fetch('/banner.txt')
     .then((res) => res.text())
