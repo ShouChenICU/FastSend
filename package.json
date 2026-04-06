@@ -18,6 +18,7 @@
     "pinia": "^3.0.4",
     "primevue": "^4.5.4",
     "qrcode": "^1.5.4",
+    "rollup": "^4.60.0",
     "serialize-javascript": "^7.0.5",
     "vue": "^3.5.31",
     "webrtc-adapter": "^9.0.4"
