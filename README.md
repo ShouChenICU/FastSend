@@ -1,7 +1,7 @@
 <h1 align="center">FastSend 文件快传 🚀</h1>
 
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-0.7.1-blue.svg?style=flat-square" />
+  <img alt="Version" src="https://img.shields.io/badge/version-0.7.2-blue.svg?style=flat-square" />
   <a href="#" target="_blank">
     <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square" />
   </a>
