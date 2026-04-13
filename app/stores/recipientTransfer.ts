@@ -291,19 +291,19 @@ export const useRecipientTransferStore = defineStore('recipientTransfer', () => 
   }
 
   async function requestFile(key: string) {
+    hasher.reset()
+    await pdc?.sendData(JSON.stringify({ type: 'reqFile', data: key }))
     return new Promise<void>((resolve, reject) => {
       reqFileResolveFn = resolve
       reqFileRejecteFn = reject
-      hasher.reset()
-      pdc?.sendData(JSON.stringify({ type: 'reqFile', data: key }))
     })
   }
 
   async function calcPeerFileHash(key: string) {
+    await pdc?.sendData(JSON.stringify({ type: 'calcFileHash', data: key }))
     return new Promise<string>((resolve, reject) => {
       calcPeerFileHashResolveFn = resolve
       calcPeerFileHashRejecteFn = reject
-      pdc?.sendData(JSON.stringify({ type: 'calcFileHash', data: key }))
     })
   }
 
@@ -317,6 +317,50 @@ export const useRecipientTransferStore = defineStore('recipientTransfer', () => 
     return segment
   }
 
+  /**
+   * 删除文件后尝试清理空的父目录。
+   * 从被删除文件的父目录向上逐级检查，如果目录为空则移除。
+   */
+  async function cleanupEmptyDirs(
+    rootDH: FileSystemDirectoryHandle | undefined,
+    deletedKeys: string[]
+  ) {
+    if (!rootDH) return
+    // 收集所有可能变空的目录路径（去重），按深度从深到浅排序
+    const dirPaths = new Set<string>()
+    for (const key of deletedKeys) {
+      const parts = key.split('/')
+      for (let i = parts.length - 1; i >= 1; i--) {
+        dirPaths.add(parts.slice(0, i).join('/'))
+      }
+    }
+    const sorted = [...dirPaths].sort((a, b) => b.split('/').length - a.split('/').length)
+
+    for (const dirPath of sorted) {
+      try {
+        const parts = dirPath.split('/')
+        let parentDH = rootDH
+        for (let i = 0; i < parts.length - 1; i++) {
+          parentDH = await parentDH.getDirectoryHandle(parts[i]!)
+        }
+        const targetName = parts[parts.length - 1]!
+        const targetDH = await parentDH.getDirectoryHandle(targetName)
+        // 检查目录是否为空
+        let isEmpty = true
+        // @ts-ignore entries() 在 FileSystemDirectoryHandle 上可用
+        for await (const _ of targetDH.entries()) {
+          isEmpty = false
+          break
+        }
+        if (isEmpty) {
+          await parentDH.removeEntry(targetName)
+        }
+      } catch {
+        // 目录不存在或无权限，忽略
+      }
+    }
+  }
+
   function selectSyncDir() {
     window
       .showDirectoryPicker()
@@ -328,21 +372,34 @@ export const useRecipientTransferStore = defineStore('recipientTransfer', () => 
       .then((val: Record<string, any>) => fileMapWithoutRoot(val))
       .then(async (localFileMap: any) => {
         syncDirStatus.value.isDiffing = true
+        const isQuick = syncDirStatus.value.isQuickDiff
+
         for (const key in peerFilesInfo.value.fileMap) {
+          const remoteFile = peerFilesInfo.value.fileMap[key]
           if (key in localFileMap) {
-            if (peerFilesInfo.value.fileMap[key]?.size === localFileMap[key]?.size) {
-              const peerHashPromise = calcPeerFileHash(key)
-              const localFileHash = await calcMD5(localFileMap[key].file)
-              const peerFileHash = await peerHashPromise
-              if (localFileHash === peerFileHash) {
-                localFileMap[key].isEqual = true
-                continue
+            const localFile = localFileMap[key]
+            if (remoteFile?.size === localFile?.size) {
+              if (isQuick) {
+                // 快速模式：大小相同且修改时间一致则视为相同
+                if (remoteFile?.lastModified === localFile?.lastModified) {
+                  localFile.isEqual = true
+                  continue
+                }
+              } else {
+                // 精确模式：大小相同时进一步比较 MD5
+                const peerHashPromise = calcPeerFileHash(key)
+                const localFileHash = await calcMD5(localFileMap[key].file)
+                const peerFileHash = await peerHashPromise
+                if (localFileHash === peerFileHash) {
+                  localFile.isEqual = true
+                  continue
+                }
               }
             }
-            syncDirStatus.value.fileMapUpdate[key] = localFileMap[key]
-            localFileMap[key].isUpdate = true
+            // 使用远端文件信息，FilesTree 展示的大小为远端文件大小
+            syncDirStatus.value.fileMapUpdate[key] = remoteFile!
+            localFile.isUpdate = true
           } else {
-            const remoteFile = peerFilesInfo.value.fileMap[key]
             if (remoteFile) {
               syncDirStatus.value.fileMapAdd[key] = remoteFile
             }
@@ -357,6 +414,18 @@ export const useRecipientTransferStore = defineStore('recipientTransfer', () => 
         syncDirStatus.value.isDiffing = false
       })
       .catch((error: unknown) => {
+        // 目录选择取消时 isWaitingSelectDir 仍为 true，用户可重新选择
+        // 如果是目录已选择后的异常（对比阶段），则需要恢复 UI 状态
+        if (!syncDirStatus.value.isWaitingSelectDir) {
+          syncDirStatus.value.isWaitingSelectDir = true
+          syncDirStatus.value.isDiffing = false
+          toast.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: t('hint.syncDiffFailed'),
+            life: 5e3
+          })
+        }
         console.warn(error)
       })
   }
@@ -422,7 +491,9 @@ export const useRecipientTransferStore = defineStore('recipientTransfer', () => 
           saveFileFH = await window.showSaveFilePicker({
             startIn: 'downloads',
             suggestedName: safeName,
-            ...(ext && { types: [{ description: '', accept: { 'application/x-fastsend': [ext] } }] })
+            ...(ext && {
+              types: [{ description: '', accept: { 'application/x-fastsend': [ext] } }]
+            })
           })
           curFileWriter = await saveFileFH?.createWritable()
         }
@@ -485,6 +556,9 @@ export const useRecipientTransferStore = defineStore('recipientTransfer', () => 
             console.warn('删除失败', key, error)
           }
         }
+
+        // 删除文件后尝试清理空的父目录
+        await cleanupEmptyDirs(syncTargetDH, syncDirStatus.value.waitDeleteList)
       }
 
       await pdc?.sendData(JSON.stringify({ type: 'done' }))

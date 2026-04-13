@@ -50,10 +50,10 @@ FastSend 是一个基于 WebRTC 技术的点对点文件传输工具，支持快
 
 ```bash
 # 安装依赖
-yarn install
+bun install
 
 # 构建项目
-yarn build
+bun run build
 ```
 
 ## 🚀 使用方法

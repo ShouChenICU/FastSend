@@ -156,13 +156,14 @@ onUnmounted(() => {
               <div class="flex flex-col items-center my-8">
                 <Icon name="solar:folder-with-files-line-duotone" size="64" />
                 <p class="text-lg mt-2">{{ syncDirStatus.folderName }}</p>
-                <!-- <p class="text-xs mt-1 text-gray-600 dark:text-gray-500">
-                  {{ humanFileSize(curFile.size) }}
-                </p> -->
               </div>
               <p class="text-xs my-2">
                 <span class="text-red-500">*</span>{{ t('hint.pleaseSelectDirToReceiveSync') }}
               </p>
+              <div class="flex items-center gap-2 my-3">
+                <ToggleSwitch v-model="syncDirStatus.isQuickDiff" />
+                <span class="text-sm">{{ t('hint.quickDiffMode') }}</span>
+              </div>
               <Button
                 outlined
                 rounded
@@ -186,18 +187,21 @@ onUnmounted(() => {
               <FilesTree
                 :file-map="syncDirStatus.fileMapAdd"
                 :disabled="status.isLock"
+                :root-label="syncDirStatus.folderName"
                 v-model:selected-key="syncDirStatus.addKeys"
               />
               <p class="mt-2">{{ t('hint.pleaseSelectUpdate') }}</p>
               <FilesTree
                 :file-map="syncDirStatus.fileMapUpdate"
                 :disabled="status.isLock"
+                :root-label="syncDirStatus.folderName"
                 v-model:selected-key="syncDirStatus.updateKeys"
               />
               <p class="mt-2">{{ t('hint.pleaseSelectDelete') }}</p>
               <FilesTree
                 :file-map="syncDirStatus.fileMapDelete"
                 :disabled="status.isLock"
+                :root-label="syncDirStatus.folderName"
                 v-model:selected-key="syncDirStatus.deleteKeys"
               />
             </div>

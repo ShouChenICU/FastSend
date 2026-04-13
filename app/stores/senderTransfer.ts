@@ -36,6 +36,8 @@ export const useSenderTransferStore = defineStore('senderTransfer', () => {
   let ws: WebSocket | null = null
   let pdc: PeerDataChannel | null = null
   const hasher = CryptoJS.algo.MD5.create()
+  // syncDir 场景下，payload 中的键是去根后的，需要映射回原始文件项
+  let payloadFileMap: Record<string, { file?: File }> = {}
 
   const shareLink = computed(() => {
     if (!import.meta.client || !code.value) {
@@ -54,6 +56,7 @@ export const useSenderTransferStore = defineStore('senderTransfer', () => {
     durationTimeStr.value = '0:00:00'
     curFile.value = createSenderCurrentFileState()
     status.value = createSenderStatusState()
+    payloadFileMap = {}
   }
 
   function dispose() {
@@ -85,9 +88,26 @@ export const useSenderTransferStore = defineStore('senderTransfer', () => {
 
     status.value.isWaitingConfirm = false
     await pdc?.sendData(JSON.stringify({ type: 'user', data: userStore.userInfo }))
-    await pdc?.sendData(
-      JSON.stringify({ type: 'files', data: transferConfigStore.buildSenderPayload() })
-    )
+
+    const payload = transferConfigStore.buildSenderPayload()
+
+    // syncDir 场景下 payload 的键已经去根，需要建立去根键到原始文件项的映射
+    if (transferConfigStore.type === 'syncDir') {
+      payloadFileMap = {}
+      const originalFileMap = transferConfigStore.fileMap
+      for (const payloadKey of Object.keys(payload.fileMap)) {
+        for (const [origKey, origItem] of Object.entries(originalFileMap)) {
+          if (origKey.replace(/.*?\//, '') === payloadKey) {
+            payloadFileMap[payloadKey] = origItem
+            break
+          }
+        }
+      }
+    } else {
+      payloadFileMap = transferConfigStore.fileMap
+    }
+
+    await pdc?.sendData(JSON.stringify({ type: 'files', data: payload }))
   }
 
   async function handleObjData(obj: any) {
@@ -102,7 +122,7 @@ export const useSenderTransferStore = defineStore('senderTransfer', () => {
 
     if (obj.type === 'reqFile') {
       hasher.reset()
-      const fileDetail = transferConfigStore.fileMap[obj.data]
+      const fileDetail = payloadFileMap[obj.data]
       const file = fileDetail?.file
       const name = `${fileDetail?.paths[fileDetail?.paths?.length - 1] || ''}`
 
@@ -139,8 +159,7 @@ export const useSenderTransferStore = defineStore('senderTransfer', () => {
         const elapsed = nowTime - curFile.value.startTime
         // 防止时间差为零导致除零异常
         if (elapsed > 0) {
-          curFile.value.speed =
-            (curFile.value.speed + ab.byteLength / (elapsed / 1e3)) / 2
+          curFile.value.speed = (curFile.value.speed + ab.byteLength / (elapsed / 1e3)) / 2
         }
         curFile.value.startTime = nowTime
       }
@@ -156,7 +175,7 @@ export const useSenderTransferStore = defineStore('senderTransfer', () => {
 
     if (obj.type === 'calcFileHash') {
       hasher.reset()
-      const fileDetail = transferConfigStore.fileMap[obj.data]
+      const fileDetail = payloadFileMap[obj.data]
       const file = fileDetail?.file
       if (!file) {
         await pdc?.sendData(JSON.stringify({ type: 'err', data: 404 }))

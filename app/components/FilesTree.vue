@@ -1,7 +1,9 @@
 <script setup lang="ts">
 const props = defineProps({
   fileMap: { type: Object, default: {} },
-  disabled: { type: Boolean, default: false }
+  disabled: { type: Boolean, default: false },
+  /** 可选的虚拟根目录名称，传入后会在树顶层包裹一个根节点方便全选 */
+  rootLabel: { type: String, default: '' }
 })
 const selectedKey = defineModel('selectedKey', { default: {} })
 const totalFileCount = computed(() => Object.keys(props.fileMap).length)
@@ -14,7 +16,9 @@ const totalSize = computed(() => {
   Object.keys(selectedKey.value)
     .filter((n) => !/\/$/.test(n))
     .forEach((n) => {
-      size += props.fileMap[n].size
+      if (props.fileMap[n]) {
+        size += props.fileMap[n].size
+      }
     })
   return size
 })
@@ -60,11 +64,19 @@ function calcTreeNodes() {
     }
   }
 
-  // console.log(root)
-
   const tmpNodes = dealNodes(root)
 
-  // console.log(tmpNodes)
+  // 如果指定了虚拟根目录名，则用一个根节点包裹所有子项
+  if (props.rootLabel) {
+    return [
+      {
+        key: props.rootLabel + '/',
+        label: props.rootLabel + '/',
+        data: -1,
+        children: tmpNodes
+      }
+    ]
+  }
 
   return tmpNodes
 }

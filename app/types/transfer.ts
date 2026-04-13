@@ -107,6 +107,8 @@ export interface SyncDirState {
   folderName: string
   isWaitingSelectDir: boolean
   isDiffing: boolean
+  /** 是否使用快速对比模式（仅比较大小和修改时间，不计算哈希） */
+  isQuickDiff: boolean
   fileMapAdd: FlatFileMap
   fileMapUpdate: FlatFileMap
   fileMapDelete: FlatFileMap
@@ -198,6 +200,7 @@ export function createSyncDirState(): SyncDirState {
     folderName: '',
     isWaitingSelectDir: true,
     isDiffing: true,
+    isQuickDiff: false,
     fileMapAdd: {},
     fileMapUpdate: {},
     fileMapDelete: {},

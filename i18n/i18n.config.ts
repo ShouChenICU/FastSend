@@ -70,7 +70,9 @@ export default defineI18nConfig(() => ({
         inCompStructure: 'In comparison structure',
         pleaseSelectAdd: 'Please select the file you want to add',
         pleaseSelectUpdate: 'Please select the file to update',
-        pleaseSelectDelete: 'Please select the file to delete'
+        pleaseSelectDelete: 'Please select the file to delete',
+        syncDiffFailed: 'Directory comparison failed, please try again',
+        quickDiffMode: 'Quick mode (compare size & date only)'
       }
     },
     zh: {
@@ -140,7 +142,9 @@ export default defineI18nConfig(() => ({
         inCompStructure: '对比结构中',
         pleaseSelectAdd: '请选择要新增的文件',
         pleaseSelectUpdate: '请选择要更新的文件',
-        pleaseSelectDelete: '请选择要删除的文件'
+        pleaseSelectDelete: '请选择要删除的文件',
+        syncDiffFailed: '目录对比失败，请重试',
+        quickDiffMode: '快速模式（仅比较大小和日期）'
       }
     }
   }

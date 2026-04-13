@@ -218,17 +218,12 @@ export function getValFromLocalStorage<T>(key: string, defVal?: T): T | null {
 export async function calcMD5(file: File | Blob) {
   const hasher = CryptoJS.algo.MD5.create()
 
-  // 计算分片数量
   const sliceSize = 1024 * 1024
-  const count = file.size / sliceSize + 1
+  const count = Math.ceil(file.size / sliceSize)
   for (let i = 0; i < count; i++) {
     const ab = await file.slice(i * sliceSize, (i + 1) * sliceSize).arrayBuffer()
-    if (ab.byteLength > 0) {
-      // 计算哈希
-      hasher.update(CryptoJS.lib.WordArray.create(ab))
-    }
+    hasher.update(CryptoJS.lib.WordArray.create(ab))
   }
-  // 返回Hash值
   return hasher.finalize().toString(CryptoJS.enc.Base64)
 }
 

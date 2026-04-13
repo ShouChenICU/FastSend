@@ -42,5 +42,5 @@
     "workbox-build/rollup": "^2.80.0",
     "serialize-javascript": "^7.0.5"
   },
-  "packageManager": "yarn@1.22.22"
+  "packageManager": "bun@1.2.12"
 }

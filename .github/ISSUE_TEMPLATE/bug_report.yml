@@ -42,9 +42,7 @@ body:
         我们需要如下信息来了解您自行部署的项目版本，请尽可能提供您的版本开发环境信息，包括但不限于：
 
         - 操作系统
-        - Nodejs 版本
-        - Corepack 版本
-        - Yarnpkg 版本
+        - Nodejs / Bun 版本
         - 您的网络环境（代理、VPN、公司内网等）
   - type: textarea
     id: dev_environment
@@ -53,9 +51,7 @@ body:
       description: "请详细描述你使用的 FastSend 时的本地开发环境信息和网络状态"
       value: |
         - 操作系统：Windows 11 专业工作站 24H2
-        - Nodejs 版本：v23.8.0
-        - Corepack 版本：v0.31.0
-        - Yarnpkg 版本：v1.22.22
+        - Bun 版本：v1.2.12
         - 网络状态
           - 服务器位置：官网版本
           - 发送方：企业内网
