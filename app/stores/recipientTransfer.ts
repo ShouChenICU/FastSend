@@ -450,7 +450,7 @@ export const useRecipientTransferStore = defineStore('recipientTransfer', () => 
         return
       }
       totalFileSize.value = waitReceiveFileList.value.reduce(
-        (size, name) => size + (peerFilesInfo.value.fileMap[name]?.size || 0),
+        (size: number, name: string) => size + (peerFilesInfo.value.fileMap[name]?.size || 0),
         0
       )
     } else if (peerFilesInfo.value.type === 'syncDir') {

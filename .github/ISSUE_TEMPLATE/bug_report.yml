@@ -1,8 +1,8 @@
-name: "问题反馈"
+name: '问题反馈'
 description: 使用本项目遇到了问题，点击反馈！
 labels:
   - Bug
-title: "【问题反馈】："
+title: '【问题反馈】：'
 assignees:
   - Dragon1573
   - ShouChenICU
@@ -10,28 +10,28 @@ body:
   - type: checkboxes
     id: issue_type
     attributes:
-      label: "前置条件"
-      description: "请确认您已经完成了以下操作"
+      label: '前置条件'
+      description: '请确认您已经完成了以下操作'
       options:
-        - label: "我已经查阅了 README 文档，但它没有涉及我的问题"
-        - label: "我尝试自行部署并运行 main 分支下的最新代码，问题依然存在"
-        - label: "我已经在 GitHub Issues / Pull Requests 中搜索了相关问题，但没有人提到过它"
-        - label: "我已经尝试在其他平台进行搜索，但没有人能给出解决方案"
-        - label: "我已经尝试向 LLM 寻求帮助，但它也不知道如何解决"
-        - label: "我本应该无视掉这一条，我只是无脑全选了以上所有项而已"
+        - label: '我已经查阅了 README 文档，但它没有涉及我的问题'
+        - label: '我尝试自行部署并运行 main 分支下的最新代码，问题依然存在'
+        - label: '我已经在 GitHub Issues / Pull Requests 中搜索了相关问题，但没有人提到过它'
+        - label: '我已经尝试在其他平台进行搜索，但没有人能给出解决方案'
+        - label: '我已经尝试向 LLM 寻求帮助，但它也不知道如何解决'
+        - label: '我本应该无视掉这一条，我只是无脑全选了以上所有项而已'
   - type: textarea
     id: issue_description
     attributes:
-      label: "问题描述"
-      placeholder: "请详细描述您遇到的问题"
+      label: '问题描述'
+      placeholder: '请详细描述您遇到的问题'
     validations:
       required: true
   - type: input
     id: issue_version
     attributes:
-      label: "问题版本"
-      placeholder: "如果使用自部署版本，请填写部署时使用的版本号或 Commit ID ；否则，保持默认值"
-      value: "官网"
+      label: '问题版本'
+      placeholder: '如果使用自部署版本，请填写部署时使用的版本号或 Commit ID ；否则，保持默认值'
+      value: '官网'
     validations:
       required: true
   - type: markdown
@@ -47,11 +47,11 @@ body:
   - type: textarea
     id: dev_environment
     attributes:
-      label: "环境信息"
-      description: "请详细描述你使用的 FastSend 时的本地开发环境信息和网络状态"
+      label: '环境信息'
+      description: '请详细描述你使用的 FastSend 时的本地开发环境信息和网络状态'
       value: |
         - 操作系统：Windows 11 专业工作站 24H2
-        - Bun 版本：v1.2.12
+        - Bun 版本：v1.3.12
         - 网络状态
           - 服务器位置：官网版本
           - 发送方：企业内网
@@ -61,14 +61,14 @@ body:
   - type: textarea
     id: issue_reproduce
     attributes:
-      label: "复现步骤"
-      placeholder: "请详细描述如何复现这个问题"
+      label: '复现步骤'
+      placeholder: '请详细描述如何复现这个问题'
     validations:
       required: true
   - type: textarea
     id: issue_expect
     attributes:
-      label: "期望行为"
-      placeholder: "请描述您期望的行为"
+      label: '期望行为'
+      placeholder: '请描述您期望的行为'
     validations:
       required: true

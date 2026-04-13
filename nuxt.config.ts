@@ -39,9 +39,6 @@ export default defineNuxtConfig({
       useCookie: true,
       cookieKey: 'i18n_redirected',
       redirectOn: 'root'
-    },
-    bundle: {
-      optimizeTranslationDirective: false
     }
   },
 
@@ -72,7 +69,6 @@ export default defineNuxtConfig({
   colorMode: {
     preference: 'system', // default value of $colorMode.preference
     fallback: 'light', // fallback value if not system preference found
-    hid: 'nuxt-color-mode-script',
     globalName: '__NUXT_COLOR_MODE__',
     componentName: 'ColorScheme',
     classPrefix: '',
@@ -122,8 +118,13 @@ export default defineNuxtConfig({
   nitro: {
     experimental: {
       websocket: true
+    },
+    // 将所有依赖内联打包进 server bundle，
+    // 避免外置 node_modules 中传递依赖缺失（Node 24+ ESM 严格解析）
+    externals: {
+      inline: [/.*/]
     }
   },
 
-  compatibilityDate: '2024-08-09'
+  compatibilityDate: '2026-04-13'
 })

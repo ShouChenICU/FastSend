@@ -82,7 +82,7 @@ export function selectAvatar(cb: (url: string) => void) {
       const file = input.files[0]
       input.onchange = null
       input.remove()
-      createImageBitmap(file)
+      createImageBitmap(file!)
         .then((img) => {
           // 将图片转256x256的webp格式，节省空间
           const oc = new OffscreenCanvas(256, 256)
@@ -125,7 +125,7 @@ export function humanFileSize(bytes: number, decimals = 2): string {
   var dm = decimals || 2
   var sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
   var i = Math.floor(Math.log(bytes) / Math.log(k))
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + sizes[i]
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + (sizes[i] ?? '')
 }
 
 export function doDownloadFromHref(href: string, filename: string) {

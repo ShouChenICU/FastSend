@@ -36,10 +36,10 @@
 
 维护时必须遵守以下技术约束：
 
-- 包管理器和运行时只使用 `bun`
-- 锁文件以 `bun.lock` 为准
-- 不要改用 `npm`、`yarn` 或 `pnpm`
-- 依赖安装、升级、验证命令优先使用 `bun install`、`bun run build`
+- 包管理器只使用 `yarn`
+- 锁文件以 `yarn.lock` 为准
+- 不要改用 `npm`、`bun` 或 `pnpm`
+- 依赖安装、升级、验证命令优先使用 `yarn install`、`yarn build`
 - Tailwind 当前固定在 v3 体系，除非用户明确要求并批准，不要擅自迁移到 Tailwind 4
 
 ## 3. 项目结构认知
@@ -259,16 +259,16 @@
 你必须使用以下命令体系：
 
 ```bash
-bun install
-bun run build
+yarn install
+yarn build
 ```
 
 默认要求：
 
-- 修改依赖后要保证 `bun.lock` 同步更新
-- 不要提交只改 `package.json` 不改 `bun.lock` 的结果
+- 修改依赖后要保证 `yarn.lock` 同步更新
+- 不要提交只改 `package.json` 不改 `yarn.lock` 的结果
 - 不要随意升级 Tailwind、PrimeVue、Nuxt 生态包的大版本，除非任务明确要求
-- 升级依赖后必须至少执行一次 `bun run build`
+- 升级依赖后必须至少执行一次 `yarn build`
 
 ## 12. 修改前后的检查清单
 
@@ -281,7 +281,7 @@ bun run build
 提交修改前，请至少检查：
 
 - 类型错误是否消除
-- `bun run build` 是否通过
+- `yarn build` 是否通过
 - 页面是否仍使用正确的 store
 - 文案改动是否同步到 i18n
 - 是否引入了重复状态源
@@ -297,7 +297,7 @@ bun run build
 - 不要擅自修改错误码语义
 - 不要引入新的状态管理方案
 - 不要把页面重新做成“胖组件”
-- 不要改用 `npm`、`yarn` 或 `pnpm`
+- 不要改用 `npm`、`bun` 或 `pnpm`
 - 不要只为了“看起来更现代”而替换现有稳定实现
 
 ## 14. Agent 的默认工作方式
@@ -309,7 +309,7 @@ bun run build
 2. 找到状态归属和业务边界
 3. 在现有架构内做最小闭环修改
 4. 补充必要的中文注释与类型
-5. 运行 `bun run build` 验证
+5. 检查代码类型警告或其他错误
 6. 汇报改动时，明确说明是否影响发送、接收、同步、信令中的哪一段流程
 
 ## 15. 输出质量要求

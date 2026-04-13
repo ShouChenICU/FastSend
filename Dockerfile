@@ -1,14 +1,14 @@
 # 构建阶段
 
-FROM oven/bun:1 AS builder
+FROM node:24-alpine AS builder
 
 WORKDIR /app
 
-COPY package.json bun.lock ./
-RUN bun install --frozen-lockfile
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
 
 COPY . .
-RUN bun run build
+RUN yarn build
 
 # 生产阶段
 FROM node:24-alpine

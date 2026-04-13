@@ -1,7 +1,7 @@
 <h1 align="center">FastSend 文件快传 🚀</h1>
 
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-0.7.2-blue.svg?style=flat-square" />
+  <img alt="Version" src="https://img.shields.io/badge/version-0.7.3-blue.svg?style=flat-square" />
   <a href="#" target="_blank">
     <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square" />
   </a>
@@ -50,10 +50,10 @@ FastSend 是一个基于 WebRTC 技术的点对点文件传输工具，支持快
 
 ```bash
 # 安装依赖
-bun install
+yarn install
 
 # 构建项目
-bun run build
+yarn build
 ```
 
 ## 🚀 使用方法

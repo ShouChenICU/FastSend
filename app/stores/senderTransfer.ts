@@ -4,6 +4,7 @@ import { PeerDataChannel } from '~/utils/PeerDataChannel'
 import {
   createSenderCurrentFileState,
   createSenderStatusState,
+  type FlatFileMap,
   type SenderCurrentFileState,
   type SenderStatusState,
   type UserInfo
@@ -37,7 +38,7 @@ export const useSenderTransferStore = defineStore('senderTransfer', () => {
   let pdc: PeerDataChannel | null = null
   const hasher = CryptoJS.algo.MD5.create()
   // syncDir 场景下，payload 中的键是去根后的，需要映射回原始文件项
-  let payloadFileMap: Record<string, { file?: File }> = {}
+  let payloadFileMap: FlatFileMap = {}
 
   const shareLink = computed(() => {
     if (!import.meta.client || !code.value) {
@@ -94,7 +95,7 @@ export const useSenderTransferStore = defineStore('senderTransfer', () => {
     // syncDir 场景下 payload 的键已经去根，需要建立去根键到原始文件项的映射
     if (transferConfigStore.type === 'syncDir') {
       payloadFileMap = {}
-      const originalFileMap = transferConfigStore.fileMap
+      const originalFileMap: FlatFileMap = transferConfigStore.fileMap
       for (const payloadKey of Object.keys(payload.fileMap)) {
         for (const [origKey, origItem] of Object.entries(originalFileMap)) {
           if (origKey.replace(/.*?\//, '') === payloadKey) {
