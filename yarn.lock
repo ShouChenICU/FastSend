@@ -5008,11 +5008,11 @@ __metadata:
   linkType: hard
 
 "@simple-git/argv-parser@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "@simple-git/argv-parser@npm:1.1.0"
+  version: 1.1.1
+  resolution: "@simple-git/argv-parser@npm:1.1.1"
   dependencies:
     "@simple-git/args-pathspec": "npm:^1.0.3"
-  checksum: 10c0/34cc01699c2bd1654896f6e84bd10abd5f3d4ede88c30473bd90b7f564246a6b24c921a26ac7800d0bebf8955bbef2d5b8ed2e1db2500ccb73da523176c1300a
+  checksum: 10c0/2c21166f1bb7c4373e7b4e52bd0c7f333e58ea0ff5ac0b6c2d305835f4a2bcad1ef4bcce3cff63312ac55655ea7be3aba4c7c0c41e3ebcb8bee343f65bb92f5e
   languageName: node
   linkType: hard
 
@@ -8190,14 +8190,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"devalue@npm:^5.1.1, devalue@npm:^5.9.0":
-  version: 5.9.2
-  resolution: "devalue@npm:5.9.2"
-  checksum: 10c0/06ee48d3a69a2f77dee7867be4885b965d10592cd7082a19e885a81bc552548780564ea244ecc77e70a91c41bea7086a473b85120d73bfa1737c801a3797e6b5
-  languageName: node
-  linkType: hard
-
-"devalue@npm:^5.9.2":
+"devalue@npm:^5.1.1, devalue@npm:^5.9.0, devalue@npm:^5.9.2":
   version: 5.9.4
   resolution: "devalue@npm:5.9.4"
   checksum: 10c0/d621083acce13d7812418ed07d99f027f83ee00ba591a2d2eab4c9436e1491ebce7bc1a92aa4c1fb7903c31c0e3c0a3cdf8662bf31644742202e003c04c17e33
@@ -13463,12 +13456,12 @@ __metadata:
   linkType: hard
 
 "postcss-selector-parser@npm:^7.0.0, postcss-selector-parser@npm:^7.1.4":
-  version: 7.1.5
-  resolution: "postcss-selector-parser@npm:7.1.5"
+  version: 7.1.6
+  resolution: "postcss-selector-parser@npm:7.1.6"
   dependencies:
     cssesc: "npm:^3.0.0"
     util-deprecate: "npm:^1.0.2"
-  checksum: 10c0/e277a136ef87ae2abbc77d38e0773bf6245975889ada3d7d785f515df4d2ab543322f9189e851d6a6bcd2d8e512a1164d1dfd5af2f5bbb2d177c687faf945038
+  checksum: 10c0/fc8279859896b96ef25b24d0289b2bfff7bce6647b247aa983939ff872e226663788d1ea57bddf9d1695119c071e5cdcb8b2a364ed4313502efe4b0319879154
   languageName: node
   linkType: hard
 
@@ -13699,7 +13692,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prosemirror-model@npm:^1.0.0, prosemirror-model@npm:^1.20.0, prosemirror-model@npm:^1.21.0, prosemirror-model@npm:^1.25.4":
+"prosemirror-model@npm:^1.0.0, prosemirror-model@npm:^1.21.0, prosemirror-model@npm:^1.25.4":
   version: 1.25.4
   resolution: "prosemirror-model@npm:1.25.4"
   dependencies:
@@ -13708,12 +13701,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prosemirror-model@npm:^1.25.11, prosemirror-model@npm:^1.25.8":
+"prosemirror-model@npm:^1.25.11":
   version: 1.25.11
   resolution: "prosemirror-model@npm:1.25.11"
   dependencies:
     orderedmap: "npm:^2.0.0"
   checksum: 10c0/e41faa477414160a602289b778189163b39a4563799defea1862183087f9ec77f02c292e3e79dd32fcc1a8878aedbdcea50f0f752ee03fe64c24ce6780b82205
+  languageName: node
+  linkType: hard
+
+"prosemirror-model@npm:^1.25.12":
+  version: 1.25.12
+  resolution: "prosemirror-model@npm:1.25.12"
+  dependencies:
+    orderedmap: "npm:^2.0.0"
+  checksum: 10c0/cec7505351ba635d9bcc4645b52f3a4499cceb8ba736ee092b1d81e74a6aa1ac9bedee21cbfe2f2647b4614579a97e86fdd1a2c5bda319a1d7028e7cbaa8ec9c
   languageName: node
   linkType: hard
 
@@ -13761,25 +13763,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prosemirror-view@npm:^1.0.0, prosemirror-view@npm:^1.1.0, prosemirror-view@npm:^1.27.0, prosemirror-view@npm:^1.31.0, prosemirror-view@npm:^1.41.4":
-  version: 1.41.8
-  resolution: "prosemirror-view@npm:1.41.8"
+"prosemirror-view@npm:^1.0.0, prosemirror-view@npm:^1.1.0, prosemirror-view@npm:^1.27.0, prosemirror-view@npm:^1.31.0, prosemirror-view@npm:^1.41.4, prosemirror-view@npm:^1.41.9":
+  version: 1.42.6
+  resolution: "prosemirror-view@npm:1.42.6"
   dependencies:
-    prosemirror-model: "npm:^1.20.0"
+    prosemirror-model: "npm:^1.25.12"
     prosemirror-state: "npm:^1.0.0"
     prosemirror-transform: "npm:^1.1.0"
-  checksum: 10c0/fae3947fec39e2b274bd10e46a2f3b671708e133dc2cc1fb2af0bd97576abd941bbdcc9dc240adf8b34dd0420a020a4006293450fc9c76e2578dba65de6dd9dc
-  languageName: node
-  linkType: hard
-
-"prosemirror-view@npm:^1.41.9":
-  version: 1.42.2
-  resolution: "prosemirror-view@npm:1.42.2"
-  dependencies:
-    prosemirror-model: "npm:^1.25.8"
-    prosemirror-state: "npm:^1.0.0"
-    prosemirror-transform: "npm:^1.1.0"
-  checksum: 10c0/2fb9bc68bc37e6b17d8c62e1596742a82caaa2315f2581ee556b80d023bf092955f5abb6b72ac67b51f7e791c7b877997deab817752cf450c4eadf350d85a5dd
+  checksum: 10c0/2e3d2092bc0b7dd7fb34192c8f698e52205b7065a6513315520d7095154af76b6eb258d74587042e1f8a1c8d403c165ea6dbdd66c3eb9b90f327e009ced4e123
   languageName: node
   linkType: hard
 
@@ -14512,9 +14503,9 @@ __metadata:
   linkType: hard
 
 "seroval@npm:^1.6.2":
-  version: 1.6.2
-  resolution: "seroval@npm:1.6.2"
-  checksum: 10c0/7beb7e0155e82d8f95471843ab97f9c7dde360f8ae5fac02462f494bb0efe41322f2e7129a3f9f59b0d5ba9cb1f9cc4bb1cc3502b44ca1fc8e82006be8a6c1a6
+  version: 1.6.8
+  resolution: "seroval@npm:1.6.8"
+  checksum: 10c0/c65f4ca1bd712d89c70c86df41bedc8270ee33cc8365c867761a9fe6310ab3b8c0fc43a48f6c1cea3cf9b5cc362714e7325e5f9275407303e4c51dfcebeb98b2
   languageName: node
   linkType: hard
 
@@ -14884,9 +14875,9 @@ __metadata:
   linkType: hard
 
 "source-map-js@npm:^1.0.1, source-map-js@npm:^1.0.2, source-map-js@npm:^1.2.1":
-  version: 1.2.1
-  resolution: "source-map-js@npm:1.2.1"
-  checksum: 10c0/7bda1fc4c197e3c6ff17de1b8b2c20e60af81b63a52cb32ec5a5d67a20a7d42651e2cb34ebe93833c5a2a084377e17455854fee3e21e7925c64a51b6a52b0faf
+  version: 1.2.2
+  resolution: "source-map-js@npm:1.2.2"
+  checksum: 10c0/d5d6dec62266834f83dd4f8a2606a196fb1a006ca5d53b0ef80ee513b7eba2f4e2ae241f4bc129ae7e9b80dea24f6e3d92b446b7e6e96be7653cab8888168a94
   languageName: node
   linkType: hard
 
