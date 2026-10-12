@@ -20,7 +20,7 @@
     "qrcode": "^1.5.4",
     "rollup": "^4.60.1",
     "serialize-javascript": "^7.0.5",
-    "vue": "^3.5.32",
+    "vue": "^3.5.43",
     "webrtc-adapter": "^9.0.4"
   },
   "devDependencies": {
