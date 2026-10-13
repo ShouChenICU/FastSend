@@ -20,6 +20,12 @@ export default defineNuxtConfig({
     '@primevue/nuxt-module'
   ],
 
+  postcss: {
+    plugins: {
+      'tailwindcss/nesting': false
+    }
+  },
+
   app: {
     head: {
       charset: 'utf-8',
