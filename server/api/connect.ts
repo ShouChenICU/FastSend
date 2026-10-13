@@ -39,7 +39,7 @@ function disposePeer(peer: any) {
   initPool.delete(peer.id)
   initedPool.delete(peer.id)
   peer.close()
-  if (peer.pairPeer && peer.pairPeer.readyState === 1) {
+  if (peer.pairPeer && peer.pairPeer.readyState === 1 && typeof peer.pairPeer.send === 'function') {
     disposePeer(peer.pairPeer)
   }
 }
