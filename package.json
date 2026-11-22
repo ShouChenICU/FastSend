@@ -14,7 +14,7 @@
     "@primevue/forms": "^4.5.5",
     "@vite-pwa/nuxt": "^1.1.1",
     "crypto-js": "^4.2.0",
-    "nuxt": "^4.6.3",
+    "nuxt": "^4.6.4",
     "pinia": "^3.0.4",
     "primevue": "^4.5.5",
     "qrcode": "^1.5.4",
