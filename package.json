@@ -55,5 +55,5 @@
     "undici": "^8.12.3",
     "unhead": "^3.4.3"
   },
-  "packageManager": "yarn@4.18.1"
+  "packageManager": "yarn@4.19.0"
 }
