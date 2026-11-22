@@ -44,6 +44,7 @@
     "@simple-git/argv-parser": "^2.0.1",
     "@unhead/vue": "^3.4.3",
     "fast-uri": "^3.1.9",
+    "fast-xml-parser": "^5.12.0",
     "fontless/esbuild": "^0.28.1",
     "glob": "<9.0.0 || >=14.0.2",
     "ip-address": "^10.7.5",
