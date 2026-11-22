@@ -46,7 +46,6 @@
     "fontless/esbuild": "^0.28.1",
     "ip-address": "^10.7.5",
     "launch-editor": "^2.14.2",
-    "node-forge": "^1.4.2",
     "postcss-selector-parser": "^7.1.6",
     "rollup": "^4.60.0",
     "serialize-javascript": "^7.1.3",
