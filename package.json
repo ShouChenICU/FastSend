@@ -39,6 +39,7 @@
     "tailwindcss": "^3.4.19"
   },
   "resolutions": {
+    "@intlify/shared": "^11.4.14",
     "@nuxt/devtools": "^4.0.0-beta",
     "@simple-git/argv-parser": "^2.0.1",
     "@unhead/vue": "^3.4.3",
@@ -52,7 +53,8 @@
     "sharp": "^0.35.4",
     "simple-git": "^4.0.1",
     "undici": "^8.12.3",
-    "unhead": "^3.4.3"
+    "unhead": "^3.4.3",
+    "vue-i18n": "^11.4.8"
   },
   "packageManager": "yarn@4.19.0"
 }
